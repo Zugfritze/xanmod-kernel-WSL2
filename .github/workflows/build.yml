@@ -77,6 +77,8 @@ jobs:
 
     - name: Open ccache
       uses: hendrikmuhs/ccache-action@v1.2.10
+      with:
+        key: ${{ github.job }}-${{ matrix.arch }}
 
     - name: Build kernel
       if: ${{ env.REBUILD_FLAG }}
