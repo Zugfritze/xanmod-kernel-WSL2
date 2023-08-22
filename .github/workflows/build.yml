@@ -71,9 +71,21 @@ jobs:
           echo "REBUILD_FLAG=" | tee -a $GITHUB_ENV
         fi
 
+    - name: Install ccache
+      if: ${{ env.REBUILD_FLAG }}
+      run: |
+        pacman -S --noconfirm ccache
+
+    - name: Open ccache
+      if: ${{ env.REBUILD_FLAG }}
+      uses: hendrikmuhs/ccache-action@v1.2.10
+      with:
+        key: ${{ github.job }}-${{ matrix.arch }}
+
     - name: Build kernel
       if: ${{ env.REBUILD_FLAG }}
       run: |
+        export PATH="/usr/lib/ccache/bin:$PATH"
         cd linux && ../build.sh
         mv arch/x86/boot/bzImage ../${{ matrix.image-name }}
         cd .. && sha256sum ${{ matrix.image-name }} > ${{ matrix.image-name }}.sha256
