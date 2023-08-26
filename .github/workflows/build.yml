@@ -33,7 +33,9 @@ jobs:
 
     steps:
     - name: Trust this directory
-      run: git config --global --add safe.directory '*' # v2.35.3 or later
+      run: |
+        pacman -Syyu --noconfirm
+        git config --global --add safe.directory '*' # v2.35.3 or later
 
     - uses: actions/checkout@main
     
