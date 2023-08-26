@@ -13,7 +13,7 @@ on:
 jobs:
   build:        
     runs-on: ubuntu-latest
-    container: locietta/loia-dev-base:latest
+    container: archlinux/archlinux:base-devel
     outputs:
       current_version: ${{ steps.out.outputs.current_version }}
       release_version: ${{ steps.out.outputs.release_version }}
@@ -29,6 +29,9 @@ jobs:
             image-name: bzImage
 
     steps:
+    - name: initialize
+      run: |
+        echo $'[archlinuxcn]\nServer = https://repo.archlinuxcn.org/$arch' >> /etc/pacman.conf && pacman-key --init && pacman-key --lsign-key "farseerfc@archlinux.org" && pacman -Sy --noconfirm archlinuxcn-keyring && pacman-key --populate archlinuxcn && pacman -Syy --noconfirm git
 
     - uses: actions/checkout@main
     
